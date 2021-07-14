@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:http/http.dart' as http;
-import '../utilities/constants.dart';
 import 'package:attendance_system/services/location.dart';
 
 part '../screens/sign_in.g.dart';
-
-const apiKey = 'b54ef4e248c57a88b5fa9023544ae2f8';
 
 @JsonSerializable()
 class FormData {
@@ -81,11 +78,16 @@ class _SignInState extends State<SignIn> {
                       /*Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => HomePage(
-                                  location: location,
-                                )),
+                          builder: (context) => HomePage(
+                            location: location,
+                          ),
+                        ),
                       );*/
-                      Navigator.pushNamed(context, '/tabs');
+                      Navigator.pushNamed(
+                        context,
+                        '/tabs',
+                        arguments: location,
+                      );
                     },
                   ),
                 ].expand(

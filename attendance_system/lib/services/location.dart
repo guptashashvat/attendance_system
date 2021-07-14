@@ -1,15 +1,23 @@
+import 'dart:async';
+
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:geocoder/geocoder.dart';
 
 class Location {
-  Future<String> getCurrentLocation() async {
+  Future<String> getCurrentLocation({Position position}) async {
     try {
-      Position position = await _determineCurrentPosition();
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      return placemarks[0].locality;
+      if (position == null) {
+        position = await _determineCurrentPosition();
+      }
+
+      final coordinates =
+          new Coordinates(position.latitude, position.longitude);
+      var addresses =
+          await Geocoder.local.findAddressesFromCoordinates(coordinates);
+
+      return "${addresses.first.addressLine}";
     } catch (e) {
-      return e;
+      return '${position.latitude}  ${position.longitude}';
     }
   }
 

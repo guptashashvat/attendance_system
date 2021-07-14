@@ -7,8 +7,11 @@ import 'package:attendance_system/components/icon_content.dart';
 import 'package:attendance_system/utilities/constants.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:attendance_system/services/day_date_time.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:attendance_system/services/location.dart';
 
 part '../utilities/home_page_constants.dart';
+part '../screens/home_page_variables.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({this.location});
@@ -18,35 +21,38 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TimeAndDate _timeAndDate = TimeAndDate();
-
-  String _location = '';
-  String _clockInOutLabelString = _clockInLabel.toUpperCase();
-  Color _clockInOutButtonColor = _clockInButtonColor;
-
-  String _checkInTimeString = '--';
-  String _checkOutTimeString = '--';
-  String _workingHrsString = '--';
-  String _time = '';
-  String _dayAndDate = '';
-
   @override
   void initState() {
     super.initState();
     _location = widget.location ?? "";
     _time = _timeAndDate.getTime();
     _dayAndDate = _timeAndDate.getDayAndDate();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    Timer.periodic(Duration(minutes: 1), (timer) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         _time = _timeAndDate.getTime();
         _dayAndDate = _timeAndDate.getDayAndDate();
       });
     });
 
+    positionStream = Geolocator.getPositionStream(
+      desiredAccuracy: LocationAccuracy.lowest,
+    ).listen((Position position) async {
+      if (prevPosition == null ||
+          prevPosition.longitude != position.longitude ||
+          prevPosition.latitude != position.latitude) {
+        String tempLocation =
+            await Location().getCurrentLocation(position: position);
+        setState(() {
+          prevPosition = position;
+          _location = tempLocation;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -108,9 +114,11 @@ class _HomePageState extends State<HomePage> {
                       Icons.location_on_outlined,
                       size: 20.0,
                     ),
-                    Text(
-                      _locationLabel + _location,
-                      overflow: TextOverflow.ellipsis,
+                    Flexible(
+                      child: Text(
+                        _locationLabel + _location,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -168,5 +176,11 @@ class _HomePageState extends State<HomePage> {
             ]),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    positionStream.cancel();
   }
 }

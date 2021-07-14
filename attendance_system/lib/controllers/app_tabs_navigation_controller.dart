@@ -12,16 +12,27 @@ class AppTabsNavigationController extends StatefulWidget {
 
 class _AppTabsNavigationControllerState
     extends State<AppTabsNavigationController> {
+  List<Widget> _children;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   int _currentIndex = 0;
-  final List<Widget> _children = [
-    HomePage(),
-    //HomePage(),
-    HomePage(),
-    HomePage()
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context).settings.arguments;
+    _children = [
+      HomePage(
+        location: widget.location ?? args ?? "",
+      ),
+      //HomePage(),
+      HomePage(),
+      HomePage()
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Hello'),
