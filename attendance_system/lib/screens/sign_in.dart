@@ -73,7 +73,7 @@ class _SignInState extends State<SignIn> {
                   TextButton(
                     child: Text('Sign in'),
                     onPressed: () async {
-                      String location = await Location().getCurrentLocation();
+                      Map location = await Location().getCurrentLocation();
 
                       /*Navigator.push(
                         context,

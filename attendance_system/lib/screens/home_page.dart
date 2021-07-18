@@ -24,9 +24,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _location = widget.location ?? "";
+    _locationDetails = widget.location ?? {"displayAddress": "", "position" : null};
     _time = _timeAndDate.getTime();
     _dayAndDate = _timeAndDate.getDayAndDate();
+    _lastKnownPosition = _locationDetails["position"];
 
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
@@ -38,14 +39,14 @@ class _HomePageState extends State<HomePage> {
     positionStream = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.lowest,
     ).listen((Position position) async {
-      if (lastKnownPosition == null ||
-          lastKnownPosition.longitude != position.longitude ||
-          lastKnownPosition.latitude != position.latitude) {
-        String tempLocation =
+      if (_lastKnownPosition == null ||
+          _lastKnownPosition.longitude != position.longitude ||
+          _lastKnownPosition.latitude != position.latitude) {
+        Map tempLocation =
             await locationService.getCurrentLocation(position: position);
         setState(() {
-          lastKnownPosition = position;
-          _location = tempLocation;
+          _lastKnownPosition = position;
+          _locationDetails = tempLocation;
         });
       }
     });
@@ -99,9 +100,12 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     setState(() {
                       if (!clockedIn) {
+                        print('lastKnownPosition::: $_lastKnownPosition');
                         if (locationService.getDistanceFromBranchLocation(
-                                position: lastKnownPosition) >
+                                position: _lastKnownPosition) >
                             maximumAcceptableDistanceFromBranch) {
+                          print(locationService.getDistanceFromBranchLocation(
+                              position: _lastKnownPosition));
                         } else {
                           _clockInOutLabelString = _clockOutLabel.toUpperCase();
                           _clockInOutButtonColor = _clockOutButtonColor;
@@ -109,6 +113,7 @@ class _HomePageState extends State<HomePage> {
                           clockedIn = true;
                         }
                       } else {
+                        print('_time::: $_time');
                         _checkOutTimeString = _time;
                         _workingHrsString =
                             _timeAndDate.getCurrentTimeDiffFromEarlierTime(
@@ -130,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Flexible(
                       child: Text(
-                        _locationLabel + _location,
+                        _locationLabel + _locationDetails["displayAddress"],
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

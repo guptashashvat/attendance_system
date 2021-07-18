@@ -8,22 +8,27 @@ import '../utilities/constants.dart';
 String apiKey = 'AIzaSyAsoOPaY1ChpxpkReSTq8H2aJci3KRZRp4';
 
 class Location {
-  Future<String> getCurrentLocation({Position position}) async {
+  Future<Map> getCurrentLocation({Position position}) async {
+    Map locationDetails = {"position" : position};
     try {
       if (position == null) {
         position = await determineCurrentPosition();
       }
+      locationDetails['position'] = position;
       final coordinates =
           new Coordinates(position.latitude, position.longitude);
       var addresses =
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
-      return "${addresses.first.addressLine}";
+      locationDetails['displayAddress'] = addresses.first.addressLine;
+      return locationDetails;
     } catch (e) {
-      return '${position.latitude}  ${position.longitude}';
+      locationDetails['displayAddress'] = position != null ? '${position.latitude},  ${position.longitude}' : "Not able to find address";
+      return locationDetails;
     }
   }
 
   double getDistanceFromBranchLocation({@required Position position}) {
+    print('position::: $position');
     return Geolocator.distanceBetween(
         position.latitude, position.longitude, branchLatitude, branchLongitude);
   }
