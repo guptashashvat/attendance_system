@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class TimeAndDate {
   String getTime({String format = "24"}) {
     int hour = DateTime.now().hour;
@@ -13,6 +15,28 @@ class TimeAndDate {
     }
 
     return _time;
+  }
+
+  String getCurrentTimeDiffFromEarlierTime(
+      {@required String earlierTimeString}) {
+    int currentHour = DateTime.now().hour;
+    int currentMinute = DateTime.now().minute;
+    int earlierHour = int.parse(earlierTimeString.substring(0, 2));
+    int earlierMinute = int.parse(earlierTimeString.substring(3, 5));
+    var formatIdentifier =
+        earlierTimeString.substring(earlierTimeString.length - 2);
+    int hourDiff = currentHour - earlierHour;
+    int minuteDiff = currentMinute - earlierMinute;
+    if (formatIdentifier == 'PM') {
+      hourDiff = (earlierHour == 12)
+          ? currentHour - earlierHour
+          : currentHour - (12 + earlierHour);
+    }
+    if (minuteDiff < 0) {
+      hourDiff = hourDiff - 1;
+      minuteDiff = 60 - earlierMinute + currentMinute;
+    }
+    return '${_appendZeroToMakeDoubleDigit(hourDiff)}:${_appendZeroToMakeDoubleDigit(minuteDiff)}';
   }
 
   String _appendZeroToMakeDoubleDigit(dynamic val) {

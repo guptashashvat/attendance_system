@@ -14,3 +14,7 @@ const kLargeButtonTextStyle = TextStyle(
 );
 const kBottomContainerHeight = 80.0;
 const kBottomContainerColor = Color(0xFFEB1555);
+
+const branchLatitude = 27.9343;
+const branchLongitude = 80.7882;
+const maximumAcceptableDistanceFromBranch = 100;

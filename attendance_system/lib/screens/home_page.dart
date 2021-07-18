@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     _time = _timeAndDate.getTime();
     _dayAndDate = _timeAndDate.getDayAndDate();
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         _time = _timeAndDate.getTime();
         _dayAndDate = _timeAndDate.getDayAndDate();
@@ -38,13 +38,13 @@ class _HomePageState extends State<HomePage> {
     positionStream = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.lowest,
     ).listen((Position position) async {
-      if (prevPosition == null ||
-          prevPosition.longitude != position.longitude ||
-          prevPosition.latitude != position.latitude) {
+      if (lastKnownPosition == null ||
+          lastKnownPosition.longitude != position.longitude ||
+          lastKnownPosition.latitude != position.latitude) {
         String tempLocation =
-            await Location().getCurrentLocation(position: position);
+            await locationService.getCurrentLocation(position: position);
         setState(() {
-          prevPosition = position;
+          lastKnownPosition = position;
           _location = tempLocation;
         });
       }
@@ -98,9 +98,22 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onPressed: () {
                     setState(() {
-                      _clockInOutLabelString = _clockOutLabel.toUpperCase();
-                      _clockInOutButtonColor = _clockOutButtonColor;
-                      _checkInTimeString = _time;
+                      if (!clockedIn) {
+                        if (locationService.getDistanceFromBranchLocation(
+                                position: lastKnownPosition) >
+                            maximumAcceptableDistanceFromBranch) {
+                        } else {
+                          _clockInOutLabelString = _clockOutLabel.toUpperCase();
+                          _clockInOutButtonColor = _clockOutButtonColor;
+                          _checkInTimeString = _time;
+                          clockedIn = true;
+                        }
+                      } else {
+                        _checkOutTimeString = _time;
+                        _workingHrsString =
+                            _timeAndDate.getCurrentTimeDiffFromEarlierTime(
+                                earlierTimeString: _checkInTimeString);
+                      }
                     });
                   },
                 ),
@@ -182,5 +195,6 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     super.dispose();
     positionStream.cancel();
+    timer.cancel();
   }
 }

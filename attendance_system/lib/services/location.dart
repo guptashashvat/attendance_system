@@ -1,27 +1,34 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoder/geocoder.dart';
+import '../utilities/constants.dart';
+
+String apiKey = 'AIzaSyAsoOPaY1ChpxpkReSTq8H2aJci3KRZRp4';
 
 class Location {
   Future<String> getCurrentLocation({Position position}) async {
     try {
       if (position == null) {
-        position = await _determineCurrentPosition();
+        position = await determineCurrentPosition();
       }
-
       final coordinates =
           new Coordinates(position.latitude, position.longitude);
       var addresses =
           await Geocoder.local.findAddressesFromCoordinates(coordinates);
-
       return "${addresses.first.addressLine}";
     } catch (e) {
       return '${position.latitude}  ${position.longitude}';
     }
   }
 
-  Future<Position> _determineCurrentPosition() async {
+  double getDistanceFromBranchLocation({@required Position position}) {
+    return Geolocator.distanceBetween(
+        position.latitude, position.longitude, branchLatitude, branchLongitude);
+  }
+
+  Future<Position> determineCurrentPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
