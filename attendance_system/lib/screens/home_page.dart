@@ -113,6 +113,7 @@ class _HomePageState extends State<HomePage> {
                         _workingHrsString =
                             _timeAndDate.getCurrentTimeDiffFromEarlierTime(
                                 earlierTimeString: _checkInTimeString);
+
                       }
                     });
                   },
