@@ -32,3 +32,26 @@ const _clockInOutLabelTextStyle = TextStyle(
 );
 const _clockInButtonColor = Color(0xBB2969B0);
 const _clockOutButtonColor = Colors.red;
+const _outOfRangeAlertTitle = 'Not in office range!';
+const _outOfRangeAlertDescription =
+    'You must be in 100m range of branch for check in';
+const _clockOutConfirmationDialogTitle = 'Clocking Out!';
+const _clockOutConfirmationDescription =
+    'Working hours will be calculated based on your last clock out data of the day. Are you sure you want to Clock Out now?';
+
+final TimeAndDate _timeAndDate = TimeAndDate();
+final Location locationService = Location();
+Map _locationDetails;
+String _clockInOutLabelString = _clockInLabel.toUpperCase();
+Color _clockInOutButtonColor = _clockInButtonColor;
+
+String _clockInTimeString = '--';
+String _clockOutTimeString = '--';
+String _workingHrsString = '--';
+String _time = '';
+String _dayAndDate = '';
+bool clockedIn = false;
+
+Position _lastKnownPosition;
+StreamSubscription<Position> positionStream;
+Timer timer;

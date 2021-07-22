@@ -35,7 +35,7 @@ class _AppTabsNavigationControllerState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hello'),
+        title: Text('Urban Co-Operative Bank'),
       ),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -57,11 +57,11 @@ class _AppTabsNavigationControllerState
           ),*/
           BottomNavigationBarItem(
             icon: Icon(Icons.list_alt),
-            label: 'Attendance',
+            label: 'Attendance History',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'Employee Profile',
           )
         ],
       ),

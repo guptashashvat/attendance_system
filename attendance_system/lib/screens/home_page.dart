@@ -9,9 +9,9 @@ import 'package:line_icons/line_icons.dart';
 import 'package:attendance_system/services/day_date_time.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:attendance_system/services/location.dart';
+import '../utilities/common_helpers.dart';
 
-part '../utilities/home_page_constants.dart';
-part '../screens/home_page_variables.dart';
+part '../screens/home_page_references.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({this.location});
@@ -24,7 +24,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _locationDetails = widget.location ?? {"displayAddress": "", "position" : null};
+    _locationDetails =
+        widget.location ?? {"displayAddress": "", "position": null};
     _time = _timeAndDate.getTime();
     _dayAndDate = _timeAndDate.getDayAndDate();
     _lastKnownPosition = _locationDetails["position"];
@@ -100,25 +101,40 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     setState(() {
                       if (!clockedIn) {
-                        print('lastKnownPosition::: $_lastKnownPosition');
                         if (locationService.getDistanceFromBranchLocation(
                                 position: _lastKnownPosition) >
                             maximumAcceptableDistanceFromBranch) {
-                          print(locationService.getDistanceFromBranchLocation(
-                              position: _lastKnownPosition));
+                          showAlertDialogBox(context, _outOfRangeAlertTitle,
+                              _outOfRangeAlertDescription);
                         } else {
                           _clockInOutLabelString = _clockOutLabel.toUpperCase();
                           _clockInOutButtonColor = _clockOutButtonColor;
-                          _checkInTimeString = _time;
+                          _clockInTimeString = _time;
                           clockedIn = true;
                         }
                       } else {
-                        print('_time::: $_time');
-                        _checkOutTimeString = _time;
-                        _workingHrsString =
-                            _timeAndDate.getCurrentTimeDiffFromEarlierTime(
-                                earlierTimeString: _checkInTimeString);
-
+                        List<DialogActionButtonsData> dialogActionButtonsData =
+                            [
+                          DialogActionButtonsData(
+                              actionText: 'Clock Out',
+                              action: () {
+                                _clockOutTimeString = _time;
+                                _workingHrsString = _timeAndDate
+                                    .getCurrentTimeDiffFromEarlierTime(
+                                        earlierTimeString: _clockInTimeString);
+                                Navigator.pop(context);
+                              }),
+                          DialogActionButtonsData(
+                              actionText: cancelButtonText,
+                              action: () {
+                                Navigator.pop(context, cancelButtonText);
+                              })
+                        ];
+                        showActionDialogBox(
+                            context,
+                            _clockOutConfirmationDialogTitle,
+                            _clockOutConfirmationDescription,
+                            dialogActionButtonsData);
                       }
                     });
                   },
@@ -153,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.more_time_rounded,
                         iconSize: 40.0,
                         iconColor: Colors.black54,
-                        label: _checkInTimeString,
+                        label: _clockInTimeString,
                         labelTextStyle: _attendanceInfoTextStyle,
                         label2: _clockInLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
@@ -167,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                         icon: CupertinoIcons.timer,
                         iconSize: 40.0,
                         iconColor: Colors.black54,
-                        label: _checkOutTimeString,
+                        label: _clockOutTimeString,
                         labelTextStyle: _attendanceInfoTextStyle,
                         label2: _clockOutLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
