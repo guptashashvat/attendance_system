@@ -1,4 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:collection';
+
+import 'package:table_calendar/table_calendar.dart';
 
 const kSignInEndpoint = 'https://example.com/signin';
 const kThemeColor = Color(0xFF2969B0);
@@ -14,11 +18,22 @@ const kLargeButtonTextStyle = TextStyle(
 );
 const kBottomContainerHeight = 80.0;
 const kBottomContainerColor = Color(0xFFEB1555);
+const kNoDataAvailableDashes = '--';
+const kDownArrow = '↓';
+const kUpArrow = '↑';
+const kDataTableHeaderTextStyle = TextStyle(
+  fontStyle: FontStyle.italic,
+  fontWeight: FontWeight.bold,
+);
 
 const branchLatitude = 27.9343;
 const branchLongitude = 80.7882;
 const maximumAcceptableDistanceFromBranch = 100;
 const cancelButtonText = 'Cancel';
+const clockInLabel = 'Clock In';
+const clockOutLabel = 'Clock Out';
+const workingHrsLabel = "Working Hr's";
+const dateLabel = "Date";
 
 class DialogActionButtonsData {
   final String actionText;

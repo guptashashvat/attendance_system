@@ -10,6 +10,7 @@ import 'package:attendance_system/services/day_date_time.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:attendance_system/services/location.dart';
 import '../utilities/common_helpers.dart';
+import '../utilities/constants.dart';
 
 part '../screens/home_page_references.dart';
 
@@ -107,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                           showAlertDialogBox(context, _outOfRangeAlertTitle,
                               _outOfRangeAlertDescription);
                         } else {
-                          _clockInOutLabelString = _clockOutLabel.toUpperCase();
+                          _clockInOutLabelString = clockOutLabel.toUpperCase();
                           _clockInOutButtonColor = _clockOutButtonColor;
                           _clockInTimeString = _time;
                           clockedIn = true;
@@ -171,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                         iconColor: Colors.black54,
                         label: _clockInTimeString,
                         labelTextStyle: _attendanceInfoTextStyle,
-                        label2: _clockInLabel,
+                        label2: clockInLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
                         sizedBox2Height: 0.0,
                         sizedBoxHeight: 0.0,
@@ -185,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                         iconColor: Colors.black54,
                         label: _clockOutTimeString,
                         labelTextStyle: _attendanceInfoTextStyle,
-                        label2: _clockOutLabel,
+                        label2: clockOutLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
                         sizedBox2Height: 0.0,
                         sizedBoxHeight: 0.0,
@@ -199,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                         iconColor: Colors.black54,
                         label: _workingHrsString,
                         labelTextStyle: _attendanceInfoTextStyle,
-                        label2: _workingHrsLabel,
+                        label2: workingHrsLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
                         sizedBox2Height: 0.0,
                         sizedBoxHeight: 0.0,

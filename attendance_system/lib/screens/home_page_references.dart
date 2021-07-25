@@ -1,9 +1,6 @@
 part of '../screens/home_page.dart';
 
 const _locationLabel = 'Location : ';
-const _clockInLabel = 'Clock In';
-const _clockOutLabel = 'Clock Out';
-const _workingHrsLabel = "Working Hr's";
 const _attendanceInfoLabelTextStyle = TextStyle(
   fontSize: 15.0,
   color: Colors.grey,
@@ -42,12 +39,12 @@ const _clockOutConfirmationDescription =
 final TimeAndDate _timeAndDate = TimeAndDate();
 final Location locationService = Location();
 Map _locationDetails;
-String _clockInOutLabelString = _clockInLabel.toUpperCase();
+String _clockInOutLabelString = clockInLabel.toUpperCase();
 Color _clockInOutButtonColor = _clockInButtonColor;
 
-String _clockInTimeString = '--';
-String _clockOutTimeString = '--';
-String _workingHrsString = '--';
+String _clockInTimeString = kNoDataAvailableDashes;
+String _clockOutTimeString = kNoDataAvailableDashes;
+String _workingHrsString = kNoDataAvailableDashes;
 String _time = '';
 String _dayAndDate = '';
 bool clockedIn = false;

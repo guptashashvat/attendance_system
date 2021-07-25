@@ -9,7 +9,7 @@ String apiKey = 'AIzaSyAsoOPaY1ChpxpkReSTq8H2aJci3KRZRp4';
 
 class Location {
   Future<Map> getCurrentLocation({Position position}) async {
-    Map locationDetails = {"position" : position};
+    Map locationDetails = {"position": position};
     try {
       if (position == null) {
         position = await determineCurrentPosition();
@@ -22,13 +22,14 @@ class Location {
       locationDetails['displayAddress'] = addresses.first.addressLine;
       return locationDetails;
     } catch (e) {
-      locationDetails['displayAddress'] = position != null ? '${position.latitude},  ${position.longitude}' : "Not able to find address";
+      locationDetails['displayAddress'] = position != null
+          ? '${position.latitude},  ${position.longitude}'
+          : "Not able to find address";
       return locationDetails;
     }
   }
 
   double getDistanceFromBranchLocation({@required Position position}) {
-    print('position::: $position');
     return Geolocator.distanceBetween(
         position.latitude, position.longitude, branchLatitude, branchLongitude);
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:attendance_system/screens/home_page.dart';
 import 'package:attendance_system/utilities/constants.dart';
+import '../screens/attendance_history.dart';
 
 class AppTabsNavigationController extends StatefulWidget {
   AppTabsNavigationController({this.location});
@@ -29,7 +30,7 @@ class _AppTabsNavigationControllerState
         location: widget.location ?? args ?? "",
       ),
       //HomePage(),
-      HomePage(),
+      AttendanceHistory(),
       HomePage()
     ];
 
