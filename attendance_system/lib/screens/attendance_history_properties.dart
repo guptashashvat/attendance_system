@@ -1,19 +1,31 @@
 part of '../screens/attendance_history.dart';
 
-class DummyAttendanceData {
-  List<AttendanceInfo> attendanceInfo = [];
+class AttendanceDataUtil {
+  List<AttendanceInfo> attendanceInfoList = [];
+  List<AttendanceInfo> attendanceInfoDisplayList = [];
 
-  void initData(int size) {
+  void initDummyData(int size) {
     for (int i = 0; i < size; i++) {
-      attendanceInfo.add(AttendanceInfo(
-          "${i < 10 ? '0${i + 1}' : i + 1}/07/2021", '09:00', '18:00', '9:00'));
+      var random = new Random();
+      int clockInMins = random.nextInt(60);
+      int clockOutMins = random.nextInt(60);
+      int workingHrsHr = clockOutMins >= clockInMins ? 9 : 8;
+      int workingHrsMin = clockOutMins >= clockInMins
+          ? clockOutMins - clockInMins
+          : 60 - clockInMins + clockOutMins;
+      attendanceInfoList.add(AttendanceInfo(
+          "${i < 9 ? '0${i + 1}' : i + 1}/07/2021",
+          '09:${clockInMins < 10 ? '0$clockInMins' : clockInMins}',
+          '18:${clockOutMins < 10 ? '0$clockOutMins' : clockOutMins}',
+          '${workingHrsHr < 10 ? '0$workingHrsHr' : workingHrsHr}:${workingHrsMin < 10 ? '0$workingHrsMin' : workingHrsMin}'));
     }
+    attendanceInfoDisplayList = attendanceInfoList;
   }
 
   void sortColumns(bool isAscending, String sortColumn) {
     String _aSortColumn;
     String _bSortColumn;
-    attendanceInfo.sort((a, b) {
+    attendanceInfoList.sort((a, b) {
       int aId = int.tryParse(a.date.substring(0, 2)) ?? 0;
       int bId = int.tryParse(b.date.substring(0, 2)) ?? 0;
       if (sortColumn == clockInLabel) {
@@ -52,7 +64,7 @@ class AttendanceInfo {
       this.date, this.clockInTime, this.clockOutTime, this.workingHours);
 }
 
-DummyAttendanceData dummyAttendanceData = DummyAttendanceData();
+AttendanceDataUtil attendanceDataUtil = AttendanceDataUtil();
 
 int _calendarFlex = 2;
 int _dataTableFlex = 3;
@@ -77,7 +89,7 @@ Widget _getTitleItemWidget(String label, double width) {
 
 Widget _generateFirstColumnRow(BuildContext context, int index) {
   return Container(
-    child: Text(dummyAttendanceData.attendanceInfo[index].date),
+    child: Text(attendanceDataUtil.attendanceInfoList[index].date),
     width: 100,
     height: 52,
     padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -89,21 +101,21 @@ Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
   return Row(
     children: <Widget>[
       Container(
-        child: Text(dummyAttendanceData.attendanceInfo[index].clockInTime),
+        child: Text(attendanceDataUtil.attendanceInfoList[index].clockInTime),
         width: 100,
         height: 52,
         padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
         alignment: Alignment.center,
       ),
       Container(
-        child: Text(dummyAttendanceData.attendanceInfo[index].clockOutTime),
+        child: Text(attendanceDataUtil.attendanceInfoList[index].clockOutTime),
         width: 100,
         height: 52,
         padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
         alignment: Alignment.center,
       ),
       Container(
-        child: Text(dummyAttendanceData.attendanceInfo[index].workingHours),
+        child: Text(attendanceDataUtil.attendanceInfoList[index].workingHours),
         width: 100,
         height: 52,
         padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -112,6 +124,60 @@ Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
     ],
   );
 }
+
+List<Widget> _generateLeftSideChildrenList() {
+  for (int i = 0;
+      i < attendanceDataUtil.attendanceInfoDisplayList.length;
+      i++) {
+    _leftHandSideChildren.add(Container(
+      child: Text(attendanceDataUtil.attendanceInfoDisplayList[i].date),
+      width: 100,
+      height: 52,
+      padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+      alignment: Alignment.center,
+    ));
+  }
+  return _leftHandSideChildren;
+}
+
+List<Widget> _generateRightSideChildrenList() {
+  for (int index = 0;
+      index < attendanceDataUtil.attendanceInfoDisplayList.length;
+      index++) {
+    _rightHandSideChildren.add(Row(
+      children: <Widget>[
+        Container(
+          child: Text(
+              attendanceDataUtil.attendanceInfoDisplayList[index].clockInTime),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.center,
+        ),
+        Container(
+          child: Text(
+              attendanceDataUtil.attendanceInfoDisplayList[index].clockOutTime),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.center,
+        ),
+        Container(
+          child: Text(
+              attendanceDataUtil.attendanceInfoDisplayList[index].workingHours),
+          width: 100,
+          height: 52,
+          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+          alignment: Alignment.center,
+        ),
+      ],
+    ));
+  }
+  return _rightHandSideChildren;
+}
+
+List<Widget> _leftHandSideChildren = [];
+List<Widget> _rightHandSideChildren = [];
 
 // Table Calender related references
 

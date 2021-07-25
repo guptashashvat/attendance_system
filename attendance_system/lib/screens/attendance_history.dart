@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
@@ -7,7 +8,7 @@ import 'package:intl/intl.dart';
 import '../utilities/common_helpers.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-part '../screens/attendance_history_references.dart';
+part '../screens/attendance_history_properties.dart';
 
 class AttendanceHistory extends StatefulWidget {
   // This widget is the root of your application.
@@ -18,7 +19,9 @@ class AttendanceHistory extends StatefulWidget {
 class _AttendanceHistoryState extends State<AttendanceHistory> {
   @override
   void initState() {
-    dummyAttendanceData.initData(30);
+    attendanceDataUtil.initDummyData(_today.day);
+    _generateLeftSideChildrenList();
+    _generateRightSideChildrenList();
     super.initState();
   }
 
@@ -97,9 +100,11 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 rightHandSideColumnWidth: 300,
                 isFixedHeader: true,
                 headerWidgets: _getTitleWidget(),
-                leftSideItemBuilder: _generateFirstColumnRow,
-                rightSideItemBuilder: _generateRightHandSideColumnRow,
-                itemCount: dummyAttendanceData.attendanceInfo.length,
+                leftSideChildren: _leftHandSideChildren,
+                rightSideChildren: _rightHandSideChildren,
+                //leftSideItemBuilder: _generateFirstColumnRow,
+                //rightSideItemBuilder: _generateRightHandSideColumnRow,
+                itemCount: attendanceDataUtil.attendanceInfoList.length,
                 rowSeparatorWidget: const Divider(
                   color: Colors.black54,
                   height: 1.0,
@@ -145,7 +150,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
       onPressed: () {
         sortType = label;
         isAscending = !isAscending;
-        dummyAttendanceData.sortColumns(isAscending, label);
+        attendanceDataUtil.sortColumns(isAscending, label);
         setState(() {});
       },
     );

@@ -12,7 +12,7 @@ import 'package:attendance_system/services/location.dart';
 import '../utilities/common_helpers.dart';
 import '../utilities/constants.dart';
 
-part '../screens/home_page_references.dart';
+part '../screens/home_page_properties.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({this.location});
