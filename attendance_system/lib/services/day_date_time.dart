@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import '../utilities/common_helpers.dart';
 
 class TimeAndDate {
   String getTime({String format = "24"}) {
     int hour = DateTime.now().hour;
     int minute = DateTime.now().minute;
     String _time =
-        '${_appendZeroToMakeDoubleDigit(hour)}:${_appendZeroToMakeDoubleDigit(minute)}';
+        '${appendZeroToMakeDoubleDigit(hour)}:${appendZeroToMakeDoubleDigit(minute)}';
 
     if (format == "12") {
       String am_pm = hour >= 12 ? 'PM' : 'AM';
       hour = (hour > 12) ? (hour - 12) : hour;
       _time =
-          '${_appendZeroToMakeDoubleDigit(hour)}:${_appendZeroToMakeDoubleDigit(minute)} $am_pm';
+          '${appendZeroToMakeDoubleDigit(hour)}:${appendZeroToMakeDoubleDigit(minute)} $am_pm';
     }
 
     return _time;
@@ -36,18 +37,14 @@ class TimeAndDate {
       hourDiff = hourDiff - 1;
       minuteDiff = 60 - earlierMinute + currentMinute;
     }
-    return '${_appendZeroToMakeDoubleDigit(hourDiff)}:${_appendZeroToMakeDoubleDigit(minuteDiff)}';
-  }
-
-  String _appendZeroToMakeDoubleDigit(dynamic val) {
-    return '${val < 10 ? '0$val' : val}';
+    return '${appendZeroToMakeDoubleDigit(hourDiff)}:${appendZeroToMakeDoubleDigit(minuteDiff)}';
   }
 
   String getDayAndDate() {
-    return '${_getWeekDayString(DateTime.now().weekday)}, ${_getMonthString(DateTime.now().month).substring(0, 3)} ${DateTime.now().day}';
+    return '${getWeekDayString(DateTime.now().weekday)}, ${getMonthString(DateTime.now().month).substring(0, 3)} ${DateTime.now().day}';
   }
 
-  String _getWeekDayString(int weekDay) {
+  String getWeekDayString(int weekDay) {
     switch (weekDay) {
       case DateTime.monday:
         return 'Monday';
@@ -68,7 +65,7 @@ class TimeAndDate {
     }
   }
 
-  String _getMonthString(int month) {
+  String getMonthString(int month) {
     switch (month) {
       case DateTime.january:
         return 'January';

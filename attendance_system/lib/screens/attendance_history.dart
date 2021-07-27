@@ -1,12 +1,14 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import '../utilities/constants.dart';
 import 'package:intl/intl.dart';
 import '../utilities/common_helpers.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../services/day_date_time.dart';
 
 part '../screens/attendance_history_properties.dart';
 
@@ -19,9 +21,10 @@ class AttendanceHistory extends StatefulWidget {
 class _AttendanceHistoryState extends State<AttendanceHistory> {
   @override
   void initState() {
-    attendanceDataUtil.initDummyData(_today.day);
-    _generateLeftSideChildrenList();
-    _generateRightSideChildrenList();
+    attendanceDataUtil.initDummyData(
+        _today.day, _today.month, _today.year, _today.weekday);
+    //_generateLeftSideChildrenList();
+    //_generateRightSideChildrenList();
     super.initState();
   }
 
@@ -64,11 +67,16 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 },
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                    });
+                    attendanceDataUtil.updateAttedanceInfoDisplayList(
+                        selectedDay.day, selectedDay.month, selectedDay.year);
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  } else {
+                    attendanceDataUtil.attendanceInfoDisplayList =
+                        attendanceDataUtil.attendanceInfoList;
+                    _selectedDay = null;
                   }
+                  setState(() {});
                 },
                 onFormatChanged: (format) {
                   if (_calendarFormat != format) {
@@ -100,11 +108,11 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 rightHandSideColumnWidth: 300,
                 isFixedHeader: true,
                 headerWidgets: _getTitleWidget(),
-                leftSideChildren: _leftHandSideChildren,
-                rightSideChildren: _rightHandSideChildren,
-                //leftSideItemBuilder: _generateFirstColumnRow,
-                //rightSideItemBuilder: _generateRightHandSideColumnRow,
-                itemCount: attendanceDataUtil.attendanceInfoList.length,
+                //leftSideChildren: _leftHandSideChildren,
+                //rightSideChildren: _rightHandSideChildren,
+                leftSideItemBuilder: _generateFirstColumnRow,
+                rightSideItemBuilder: _generateRightHandSideColumnRow,
+                itemCount: attendanceDataUtil.attendanceInfoDisplayList.length,
                 rowSeparatorWidget: const Divider(
                   color: Colors.black54,
                   height: 1.0,

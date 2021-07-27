@@ -48,3 +48,7 @@ void showActionDialogBox(
     ),
   );
 }
+
+String appendZeroToMakeDoubleDigit(dynamic val) {
+  return '${val < 10 ? '0$val' : val}';
+}
