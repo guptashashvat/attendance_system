@@ -5,6 +5,8 @@ class AttendanceDataUtil {
   List<AttendanceInfo> attendanceInfoDisplayList = [];
 
   void initDummyData(int day, int month, int year, int weekDay) {
+    attendanceInfoList = [];
+    attendanceInfoDisplayList = [];
     for (int i = day; i > 0; i--) {
       String clockIn, clockOut, workingHours, dayOfWeek;
       if (weekDay == 0) {
@@ -28,6 +30,11 @@ class AttendanceDataUtil {
         clockOut = '18:${appendZeroToMakeDoubleDigit(clockOutMins)}';
         workingHours =
             '${appendZeroToMakeDoubleDigit(workingHrsHr)}:${appendZeroToMakeDoubleDigit(workingHrsMin)}';
+      }
+      if (i == _today.day && month == _today.month) {
+        clockIn = clockInTimeString;
+        clockOut = clockOutTimeString;
+        workingHours = workingHrsString;
       }
       attendanceInfoList.add(AttendanceInfo(
           "${appendZeroToMakeDoubleDigit(i)}/${appendZeroToMakeDoubleDigit(month)}/$year",

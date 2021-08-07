@@ -4,7 +4,7 @@ import 'controllers/app_tabs_navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'http/mock_client.dart';
 import 'package:http/http.dart' as http;
-import 'utilities/constants.dart';
+import 'utilities/globals.dart';
 
 final http.Client httpClient = MockClient();
 

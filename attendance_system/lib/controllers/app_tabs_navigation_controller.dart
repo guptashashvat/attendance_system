@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:attendance_system/screens/home_page.dart';
-import 'package:attendance_system/utilities/constants.dart';
+import 'package:attendance_system/utilities/globals.dart';
 import '../screens/attendance_history.dart';
 
 class AppTabsNavigationController extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
-import '../utilities/constants.dart';
+import '../utilities/globals.dart';
 import 'package:intl/intl.dart';
 import '../utilities/common_helpers.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -97,6 +97,14 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                   }
                 },
                 onPageChanged: (focusedDay) {
+                  if (focusedDay.month == _today.month) {
+                    attendanceDataUtil.initDummyData(
+                        _today.day, _today.month, _today.year, _today.weekday);
+                  } else {
+                    attendanceDataUtil.initDummyData(
+                        31, focusedDay.month, _today.year, 6);
+                  }
+                  setState(() {});
                   _focusedDay = focusedDay;
                 },
               ),
@@ -108,8 +116,6 @@ class _AttendanceHistoryState extends State<AttendanceHistory> {
                 rightHandSideColumnWidth: 300,
                 isFixedHeader: true,
                 headerWidgets: _getTitleWidget(),
-                //leftSideChildren: _leftHandSideChildren,
-                //rightSideChildren: _rightHandSideChildren,
                 leftSideItemBuilder: _generateFirstColumnRow,
                 rightSideItemBuilder: _generateRightHandSideColumnRow,
                 itemCount: attendanceDataUtil.attendanceInfoDisplayList.length,

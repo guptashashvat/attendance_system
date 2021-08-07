@@ -4,13 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:attendance_system/components/round_icon_button.dart';
 import 'package:attendance_system/components/icon_content.dart';
-import 'package:attendance_system/utilities/constants.dart';
+import 'package:attendance_system/utilities/globals.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:attendance_system/services/day_date_time.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:attendance_system/services/location.dart';
 import '../utilities/common_helpers.dart';
-import '../utilities/constants.dart';
+import '../utilities/globals.dart';
 
 part '../screens/home_page_properties.dart';
 
@@ -30,17 +30,36 @@ class _HomePageState extends State<HomePage> {
     _time = _timeAndDate.getTime();
     _dayAndDate = _timeAndDate.getDayAndDate();
     _lastKnownPosition = _locationDetails["position"];
+    _distanceFromBranch = locationService
+        .getDistanceFromBranchLocation(position: _lastKnownPosition)
+        .round();
 
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timerForDateTime = Timer.periodic(Duration(seconds: 1), (timer) async {
       setState(() {
         _time = _timeAndDate.getTime();
         _dayAndDate = _timeAndDate.getDayAndDate();
       });
+      Map tempLocation =
+          await locationService.getCurrentLocation(position: null);
+      _lastKnownPosition = tempLocation["position"];
+      _distanceFromBranch = locationService
+          .getDistanceFromBranchLocation(position: _lastKnownPosition)
+          .round();
+      setState(() {});
     });
-
-    positionStream = Geolocator.getPositionStream(
+    timerForLocation = Timer.periodic(Duration(seconds: 5), (timer) async {
+      Map tempLocation =
+          await locationService.getCurrentLocation(position: null);
+      _lastKnownPosition = tempLocation["position"];
+      _distanceFromBranch = locationService
+          .getDistanceFromBranchLocation(position: _lastKnownPosition)
+          .round();
+      setState(() {});
+    });
+    /*positionStream = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.lowest,
     ).listen((Position position) async {
+      _lastKnownPosition = position;
       if (_lastKnownPosition == null ||
           _lastKnownPosition.longitude != position.longitude ||
           _lastKnownPosition.latitude != position.latitude) {
@@ -49,9 +68,13 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _lastKnownPosition = position;
           _locationDetails = tempLocation;
+          _lastKnownPosition = _locationDetails["position"];
+          _distanceFromBranch = locationService
+              .getDistanceFromBranchLocation(position: _lastKnownPosition)
+              .round();
         });
       }
-    });
+    });*/
   }
 
   @override
@@ -102,15 +125,14 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     setState(() {
                       if (!clockedIn) {
-                        if (locationService.getDistanceFromBranchLocation(
-                                position: _lastKnownPosition) >
+                        if (_distanceFromBranch >
                             maximumAcceptableDistanceFromBranch) {
                           showAlertDialogBox(context, _outOfRangeAlertTitle,
                               _outOfRangeAlertDescription);
                         } else {
                           _clockInOutLabelString = clockOutLabel.toUpperCase();
                           _clockInOutButtonColor = _clockOutButtonColor;
-                          _clockInTimeString = _time;
+                          clockInTimeString = _time;
                           clockedIn = true;
                         }
                       } else {
@@ -119,10 +141,10 @@ class _HomePageState extends State<HomePage> {
                           DialogActionButtonsData(
                               actionText: 'Clock Out',
                               action: () {
-                                _clockOutTimeString = _time;
-                                _workingHrsString = _timeAndDate
+                                clockOutTimeString = _time;
+                                workingHrsString = _timeAndDate
                                     .getCurrentTimeDiffFromEarlierTime(
-                                        earlierTimeString: _clockInTimeString);
+                                        earlierTimeString: clockInTimeString);
                                 Navigator.pop(context);
                               }),
                           DialogActionButtonsData(
@@ -147,12 +169,14 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.location_on_outlined,
+                      LineIcons.locationArrow,
                       size: 20.0,
                     ),
                     Flexible(
                       child: Text(
-                        _locationLabel + _locationDetails["displayAddress"],
+                        /*_lastKnownPosition.latitude
+                            .toString(),*/
+                        '$_locationLabel ${_distanceFromBranch < 1000 ? '$_distanceFromBranch m' : '${_distanceFromBranch / 1000} km'}',
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -170,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                         icon: Icons.more_time_rounded,
                         iconSize: 40.0,
                         iconColor: Colors.black54,
-                        label: _clockInTimeString,
+                        label: clockInTimeString,
                         labelTextStyle: _attendanceInfoTextStyle,
                         label2: clockInLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
@@ -184,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                         icon: CupertinoIcons.timer,
                         iconSize: 40.0,
                         iconColor: Colors.black54,
-                        label: _clockOutTimeString,
+                        label: clockOutTimeString,
                         labelTextStyle: _attendanceInfoTextStyle,
                         label2: clockOutLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
@@ -198,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                         icon: LineIcons.clockAlt,
                         iconSize: 40.0,
                         iconColor: Colors.black54,
-                        label: _workingHrsString,
+                        label: workingHrsString,
                         labelTextStyle: _attendanceInfoTextStyle,
                         label2: workingHrsLabel,
                         label2TextStyle: _attendanceInfoLabelTextStyle,
@@ -217,7 +241,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     super.dispose();
-    positionStream.cancel();
-    timer.cancel();
+    //positionStream.cancel();
+    timerForDateTime.cancel();
+    timerForLocation.cancel();
   }
 }

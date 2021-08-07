@@ -1,6 +1,6 @@
 part of '../screens/home_page.dart';
 
-const _locationLabel = 'Location : ';
+const _locationLabel = 'Distance from Office : ';
 const _attendanceInfoLabelTextStyle = TextStyle(
   fontSize: 15.0,
   color: Colors.grey,
@@ -42,13 +42,13 @@ Map _locationDetails;
 String _clockInOutLabelString = clockInLabel.toUpperCase();
 Color _clockInOutButtonColor = _clockInButtonColor;
 
-String _clockInTimeString = kNoDataAvailableDashes;
-String _clockOutTimeString = kNoDataAvailableDashes;
-String _workingHrsString = kNoDataAvailableDashes;
 String _time = '';
 String _dayAndDate = '';
+String distanceDisplay = '';
 bool clockedIn = false;
+int _distanceFromBranch;
 
 Position _lastKnownPosition;
-StreamSubscription<Position> positionStream;
-Timer timer;
+//StreamSubscription<Position> positionStream;
+Timer timerForDateTime;
+Timer timerForLocation;

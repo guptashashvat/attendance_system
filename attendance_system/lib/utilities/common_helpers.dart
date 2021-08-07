@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
+import 'globals.dart';
 
 void showAlertDialogBox(
     BuildContext context, String dialogBoxTitle, String dialogBoxDescription) {

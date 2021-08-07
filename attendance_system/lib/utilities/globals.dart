@@ -25,15 +25,18 @@ const kDataTableHeaderTextStyle = TextStyle(
   fontStyle: FontStyle.italic,
   fontWeight: FontWeight.bold,
 );
-
-const branchLatitude = 27.9343;
-const branchLongitude = 80.7882;
+const branchLatitude = 30.48186440439275;
+const branchLongitude = 78.0334855053766;
 const maximumAcceptableDistanceFromBranch = 100;
 const cancelButtonText = 'Cancel';
 const clockInLabel = 'Clock In';
 const clockOutLabel = 'Clock Out';
 const workingHrsLabel = "Working Hr's";
 const dateLabel = "Date";
+
+String clockInTimeString = kNoDataAvailableDashes;
+String clockOutTimeString = kNoDataAvailableDashes;
+String workingHrsString = kNoDataAvailableDashes;
 
 class DialogActionButtonsData {
   final String actionText;
