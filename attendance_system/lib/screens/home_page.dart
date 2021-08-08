@@ -174,8 +174,6 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Flexible(
                       child: Text(
-                        /*_lastKnownPosition.latitude
-                            .toString(),*/
                         '$_locationLabel ${_distanceFromBranch < 1000 ? '$_distanceFromBranch m' : '${_distanceFromBranch / 1000} km'}',
                         overflow: TextOverflow.ellipsis,
                       ),
