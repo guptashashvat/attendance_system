@@ -4,18 +4,7 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-This Application is a Location based Attendance Management System and is developed for android/iOS devices in order to digitize and ease the daily attendance process of employees of the businesses.
+This Application is a Location based Attendance Management System and is developed in Flutter for android/iOS devices in order to digitize and ease the daily attendance process of employees of the businesses.
 
 The key objective is to remove manual attendance processing and replace it with more easy and seamless solution. Some key features of the solution are:
 
@@ -50,3 +39,5 @@ The following features of Flutter/dart are used:
 ✔️ API integrations are done with Geolocator API to get location coordinates and distance between two locations (current location and office location), and with Geocoder API in order to get current address.
 
 ✔️  The code is divided into modules, services, utilities, screens, controllers, and components in order to get better code readability, understandability, optimization.
+
+The following is a video demo of the project: https://www.youtube.com/watch?v=0qWOaxCMK10
